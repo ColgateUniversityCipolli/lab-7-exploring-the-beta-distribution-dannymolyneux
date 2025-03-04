@@ -79,4 +79,46 @@ kurt = (a/(y^2)) - 3
 kurt
 
 #Task three: Do Data Summaries Help?
+library(e1071)
+sample = function(alpha, beta){
+  set.seed(7272) # Set seed so we all get the same results.
+  sample.size <- 500 # Specify sample details
+  beta.sample <- rbeta(n = sample.size,  # sample size
+                       shape1 = alpha,   # alpha parameter
+                       shape2 = beta)    # beta parameter
+  beta.sample = data.frame(x = beta.sample) #turn it into a data frame
+  sample.summary = beta.sample |> #numerical summary for each distribution
+    summarize(
+      alpha = alpha, beta = beta, mean = mean(x), variance = var(x), skew = skewness(x), kurt = kurtosis(x)
+    )
+  sample.plot = ggplot(data= beta.sample, aes(x=x))+                  # specify data
+    geom_histogram(aes(y=after_stat(density)), 
+                   #binwidth = 0.1
+                   #bins=10
+                   breaks=seq(0,1,0.10)) +                 
+    geom_line(aes(x=x, y=dbeta(x, alpha, beta), color=paste("Beta(", alpha, ", ", beta, ")", sep = "")))+
+    geom_hline(yintercept=0)+                                            # plot x axis
+    theme_bw()+                                                          # change theme
+    geom_density(color = "blue") +
+    xlab("x")+                                                           # label x axis
+    ylab("Density")+                                                   # label y axis
+    labs(color = "")                                              
+  sample.plot
+  return(sample.summary)
+}
+
+#alpha = 2, beta = 5
+#empty data frame and bind the rows for each distribution
+beta.sample.summary = data.frame()
+beta.sample.summary = bind_rows(beta.sample.summary, sample(2, 5))
+beta.sample.summary = bind_rows(beta.sample.summary, sample(5, 5))
+beta.sample.summary = bind_rows(beta.sample.summary, sample(5, 2))
+beta.sample.summary = bind_rows(beta.sample.summary, sample(0.5, 0.5))
+#values are quite similar
+view(beta.sample.summary)
+
+
+
+
+
 
