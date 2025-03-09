@@ -43,7 +43,7 @@ view(beta.data)
 
 #Task two
 
-#function retuns the kth uncentered or centered moment of beta(alpha, beta)
+#function returns the kth uncentered or centered moment of beta(alpha, beta)
 beta.moment = function(alpha, beta, k, centered) {
   if(centered == F){
     integrand = function(x) {(x^k)*dbeta(x, alpha, beta)}
@@ -117,8 +117,73 @@ beta.sample.summary = bind_rows(beta.sample.summary, sample(0.5, 0.5))
 #values are quite similar
 view(beta.sample.summary)
 
+#Task 4: Is sample size important?
+#install.packages("cumstats")
+library(cumstats)
+library(patchwork)
+data_2_5 = beta.data[1, ] #true population values for beta(2, 5) (first row of task one data frame)
+alpha = 2
+beta = 5
+n = 500
+sample.dat = rbeta(n, alpha, beta) #sample data
+#view(sample.dat)
+#cumulative variables
+cum.mean = cummean(sample.dat)
+cum.var = cumvar(sample.dat)
+cum.skew = cumskew(sample.dat)
+cum.kurt = cumkurt(sample.dat)
+#data frame for the cumulative numerical summary
+cum.dat = tibble(
+  data.points = 1:n,
+  mean = cum.mean,
+  variance = cum.var,
+  skewness = cum.skew,
+  kurtosis = cum.kurt
+)
+#view(data_2_5)
+#plots for each cumulative variable
+mean.plot = ggplot(cum.dat, aes(x=data.points, y = mean)) +
+  geom_line() +
+  geom_hline(yintercept = data_2_5$mean, linetype = "dashed", color = "blue") +
+  labs(title = "Cumulative mean for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Mean")
 
+var.plot = ggplot(cum.dat, aes(x=data.points, y = variance)) +
+  geom_line() +
+  geom_hline(yintercept = data_2_5$variance, linetype = "dashed", color = "blue") +
+  labs(title = "Cumulative variance for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Variance")
 
+skew.plot = ggplot(cum.dat, aes(x=data.points, y = skewness)) +
+  geom_line() +
+  geom_hline(yintercept = data_2_5$skew, linetype = "dashed", color = "blue") +
+  labs(title = "Cumulative skewness for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Skewness")
 
+kurt.plot = ggplot(cum.dat, aes(x=data.points, y = kurtosis)) +
+  geom_line() +
+  #adjust kurtosis by 3 because cumstats package uses regular kurtosis
+  geom_hline(yintercept = data_2_5$kurt + 3, linetype = "dashed", color = "blue") +
+  labs(title = "Cumulative kurtosis for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Kurtosis")
+mean.plot + var.plot + skew.plot + kurt.plot
 
+for(i in 2:50){
+  set.seed(7272+i)
+  new.dat = rbeta(n, alpha, beta) #new sample of data
+  #new cumulative variables
+  new.cum.mean = cummean(new.dat)
+  new.cum.var = cumvar(new.dat)
+  new.cum.skew = cumskew(new.dat)
+  new.cum.kurt = cumkurt(new.dat)
+  new.cum.dat = tibble(
+    data.points = 1:n,
+    mean = new.cum.mean,
+    variance = new.cum.var,
+    skewness = new.cum.skew,
+    kurtosis = new.cum.kurt
+  )
+  #update plots with a line for the new data
+  mean.plot = mean.plot+geom_line(data=new.cum.dat, aes(x=data.points, y = mean), color = i)
+  var.plot = var.plot+geom_line(data=new.cum.dat, aes(x=data.points, y = variance), color = i)
+  skew.plot = skew.plot+geom_line(data=new.cum.dat, aes(x=data.points, y = skewness), color = i)
+  kurt.plot = kurt.plot+geom_line(data=new.cum.dat, aes(x=data.points, y = kurtosis), color = i)
+}
+mean.plot + var.plot + skew.plot + kurt.plot
 
