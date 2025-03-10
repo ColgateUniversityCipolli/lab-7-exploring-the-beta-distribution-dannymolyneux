@@ -125,6 +125,7 @@ data_2_5 = beta.data[1, ] #true population values for beta(2, 5) (first row of t
 alpha = 2
 beta = 5
 n = 500
+set.seed(7272)
 sample.dat = rbeta(n, alpha, beta) #sample data
 #view(sample.dat)
 #cumulative variables
@@ -186,4 +187,70 @@ for(i in 2:50){
   kurt.plot = kurt.plot+geom_line(data=new.cum.dat, aes(x=data.points, y = kurtosis), color = i)
 }
 mean.plot + var.plot + skew.plot + kurt.plot
+
+#Task 5: How can we model the variation
+sample.distribution = data.frame() #data frame that will have all 1000 samples
+for(i in 1:1000){
+  set.seed(7272+i)
+  beta.sample <- rbeta(n,  # sample size
+                       alpha,   # alpha parameter
+                       beta)    # beta parameter
+  beta.sample = data.frame(x = beta.sample) #turn it into a data frame
+  new.sample.summary = beta.sample |> #numerical summary for each sample
+    summarize(
+      alpha = alpha, beta = beta, mean = mean(x), variance = var(x), skew = skewness(x), kurt = kurtosis(x)-3
+    )
+  #add the data for that sample
+  sample.distribution = bind_rows(sample.distribution, new.sample.summary)
+}
+#view(sample.distribution)
+#Distribution plots for each variable
+mean.dist.plot = ggplot(data= sample.distribution, aes(x=mean))+                 
+  geom_histogram(aes(y=after_stat(density)), 
+                 #binwidth = 0.1
+                 #bins=10
+                 breaks=seq(0.1,0.4,0.005)) +                 
+  geom_hline(yintercept=0)+                                            
+  theme_bw()+                                                       
+  geom_density(color = "blue") +
+  xlab("Mean")+                                                        
+  ylab("Density")+                                             
+  labs(title = "Distribution of Mean")
+var.dist.plot = ggplot(data= sample.distribution, aes(x=variance))+                 
+  geom_histogram(aes(y=after_stat(density)), 
+                 #binwidth = 0.1
+                 #bins=10
+                 breaks=seq(0,0.05,0.0025)) +                 
+  geom_hline(yintercept=0)+                                            
+  theme_bw()+                                                       
+  geom_density(color = "blue") +
+  xlab("Variance")+                                                        
+  ylab("Density")+                                             
+  labs(title = "Distribution of Variance")
+skew.dist.plot = ggplot(data= sample.distribution, aes(x=skew))+                 
+  geom_histogram(aes(y=after_stat(density)), 
+                 #binwidth = 0.1
+                 #bins=10
+                 breaks=seq(0,1,0.1)) +                 
+  geom_hline(yintercept=0)+                                            
+  theme_bw()+                                                       
+  geom_density(color = "blue") +
+  xlab("Skewness")+                                                        
+  ylab("Density")+                                             
+  labs(title = "Distribution of Skewness")
+kurt.dist.plot = ggplot(data= sample.distribution, aes(x=kurt))+                 
+  geom_histogram(aes(y=after_stat(density)), 
+                 #binwidth = 0.1
+                 #bins=10
+                 breaks=seq(-0.5,0.5,0.1)) +                 
+  geom_hline(yintercept=0)+                                           
+  theme_bw()+                                                       
+  geom_density(color = "blue") +
+  xlab("Excess Kurtosis")+                                                        
+  ylab("Density")+                                             
+  labs(title = "Distribution of Excess Kurtosis")
+#I notice that these variables follow a relatively normal distribution, especially the 
+#skewness and excess kurtosis. Obviously they aren't perfect because we are using samples,
+#but you can see that their density lines have the bell curve shape
+mean.dist.plot + var.dist.plot + skew.dist.plot + kurt.dist.plot
 
