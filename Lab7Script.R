@@ -257,15 +257,57 @@ mean.dist.plot + var.dist.plot + skew.dist.plot + kurt.dist.plot
 #Start of Lab 8
 #Task six: Collect and Clean Data
 dat2022 = read_csv("DeathData/2022Data.csv")
-view(dat2022)
-#dat2022 = dat2022 |>
+#view(dat2022)
+dat2022 = dat2022 |>
   select("Country Name", "2022") |> #only need data for 2022
   mutate(`2022` = `2022` / 1000) |> #convert to rate
-  rename(`2022 Death Rate` = "2022") #better column name
-#view(dat2022)
+  rename(`2022 Death Rate` = "2022") |>#better column name
+  filter(!is.na(`2022 Death Rate`)) #remove all empty data points
+view(dat2022)
   
-#Task seven: 
+#Task seven: What are alpha and beta?
+install.packages("nleqslv")
+library(nleqslv)
+MOM.beta = function(data, par){
+  alpha = par[1]
+  beta = par[2]
+  EX = alpha/(alpha+beta) #first population moment
+  m1 = mean(data) #first sample moment
+  EX2 = (alpha+1)*alpha/((alpha+beta+1)*(alpha+beta)) #second population moment
+  m2 = mean(data^2) #second sample moment
+  
+  return(c(EX-m1, EX2-m2)) #Vector of two first guesses
+}
 
+nleqslv(x = c(2, 3), # guess
+        fn = MOM.beta,
+        data=dat2022$`2022 Death Rate`)
+
+
+MLE.beta = function(data, par, neg=FALSE){
+  alpha = par[1]
+  beta = par[2]
+  loglik = sum(log(dbeta(x=data, alpha, beta)))
+  
+  return(ifelse(neg, -loglik, loglik))
+}
+
+optim(par = c(2, 5),
+      fn = MLE.beta,
+      data=dat2022$`2022 Death Rate`,
+      neg = T)
+histogram.plot = ggplot(data= dat2022, aes(x=`2022 Death Rate`))+                  # specify data
+  geom_histogram(aes(y=after_stat(density)),
+                 breaks=seq(0,1,0.10)) +                 
+  geom_line(aes(x=`2022 Death Rate`, y=MLE.beta(dat2022, c(2, 5), neg = T), color="MLE(2,5)"))+
+  geom_line(aes(x=`2022 Death Rate`, y=MOM.beta(dat2022, c(2, 5)), color="MOM(2,5)"))+
+  geom_hline(yintercept=0)+                                            # plot x axis
+  theme_bw()+                                                          # change theme
+  #geom_density(color = "blue") +
+  xlab("2022 Death Rate")+                                                           # label x axis
+  ylab("Density")+                                                   # label y axis
+  labs(color = "")
+histogram.plot
 
 
 
