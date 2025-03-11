@@ -254,3 +254,18 @@ kurt.dist.plot = ggplot(data= sample.distribution, aes(x=kurt))+
 #but you can see that their density lines have the bell curve shape
 mean.dist.plot + var.dist.plot + skew.dist.plot + kurt.dist.plot
 
+#Start of Lab 8
+#Task six: Collect and Clean Data
+dat2022 = read_csv("DeathData/2022Data.csv")
+view(dat2022)
+#dat2022 = dat2022 |>
+  select("Country Name", "2022") |> #only need data for 2022
+  mutate(`2022` = `2022` / 1000) |> #convert to rate
+  rename(`2022 Death Rate` = "2022") #better column name
+#view(dat2022)
+  
+#Task seven: 
+
+
+
+
