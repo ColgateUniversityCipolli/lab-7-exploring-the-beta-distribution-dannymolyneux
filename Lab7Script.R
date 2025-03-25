@@ -316,8 +316,63 @@ histogram.plot = ggplot()+                  # specify data
   labs(color = "")
 histogram.plot
 
+#Task eight: Which estimators should we use?
 
+alpha = 8
+beta = 950
+n = 266
+estimates.data = data.frame()
+for(i in 1:1000){
+  set.seed(7272+i)
+  new.data = rbeta(n, alpha, beta) #new sample
+  mom = nleqslv(x=c(2,5), fn = MOM.beta, data = new.data) #new method of moments estimate
+  mle = optim(par=c(2,5), fn = MLE.beta, data = new.data, neg = T) #new mle
+  estimates.data = bind_rows(estimates.data, data.frame(mom$x[1], mom$x[2], mle$par[1], mle$par[2])) #add new values to data frame
+}
+estimates.data = estimates.data |>
+  rename(mom.alpha = "mom.x.1.",
+         mom.beta = "mom.x.2.",
+         mle.alpha = "mle.par.1.",
+         mle.beta = "mle.par.2.")
 
+mom.alpha.plot = ggplot(data = estimates.data, aes(x = mom.alpha)) +
+  geom_density(fill = "red") +
+  ggtitle("MOM Alpha")
+
+mom.beta.plot = ggplot(data = estimates.data, aes(x = mom.beta)) +
+  geom_density(fill = "blue") +
+  ggtitle("MOM Beta")
+
+mle.alpha.plot = ggplot(data = estimates.data, aes(x = mle.alpha)) +
+  geom_density(fill = "green") +
+  ggtitle("MLE Alpha")
+
+mle.beta.plot = ggplot(data = estimates.data, aes(x = mle.beta)) +
+  geom_density(fill = "black") +
+  ggtitle("MLE Beta")
+
+(mom.alpha.plot | mom.beta.plot) / ((mle.alpha.plot | mle.beta.plot))
+
+summary = function(estimate, exact) {
+  bias = mean(estimate) - exact
+  precision = 1/var(estimate)
+  MSE = var(estimate) + bias^2
+  return(c(bias, precision, MSE))
+}
+
+alpha.mom = summary(estimates.data$mom.alpha, alpha)
+beta.mom = summary(estimates.data$mom.beta, beta)
+alpha.mle = summary(estimates.data$mle.alpha, alpha)
+beta.mle = summary(estimates.data$mle.beta, beta)
+
+table = data.frame()
+table = rbind( #table containing the 4 estimates for each metric
+  alpha.mom, beta.mom, alpha.mle, beta.mle
+) |> as.data.frame()
+summary.table = table |>
+  rename(Bias = "V1",
+         Precision = "V2",
+         MSE = "V3")
 
 
 
