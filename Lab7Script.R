@@ -279,35 +279,45 @@ MOM.beta = function(data, par){
   return(c(EX-m1, EX2-m2)) #Vector of two first guesses
 }
 
-nleqslv(x = c(2, 3), # guess
+moms = nleqslv(x = c(2, 5), # guess
         fn = MOM.beta,
         data=dat2022$`2022 Death Rate`)
 
 
-MLE.beta = function(data, par, neg=FALSE){
+MLE.beta = function(par, data, neg=F){
   alpha = par[1]
   beta = par[2]
-  loglik = sum(log(dbeta(x=data, alpha, beta)))
+  loglik = sum(log(dbeta(x=data, shape1 = alpha, shape2 = beta)))
   
   return(ifelse(neg, -loglik, loglik))
 }
 
-optim(par = c(2, 5),
+mles = optim(par = c(2,5), #guess
       fn = MLE.beta,
       data=dat2022$`2022 Death Rate`,
       neg = T)
-histogram.plot = ggplot(data= dat2022, aes(x=`2022 Death Rate`))+                  # specify data
-  geom_histogram(aes(y=after_stat(density)),
-                 breaks=seq(0,1,0.10)) +                 
-  geom_line(aes(x=`2022 Death Rate`, y=MLE.beta(dat2022, c(2, 5), neg = T), color="MLE(2,5)"))+
-  geom_line(aes(x=`2022 Death Rate`, y=MOM.beta(dat2022, c(2, 5)), color="MOM(2,5)"))+
-  geom_hline(yintercept=0)+                                            # plot x axis
-  theme_bw()+                                                          # change theme
+
+ggdat.beta = tibble(x = seq(0,0.025, length.out = 1000)) |> #data frame for mom and mle
+  mutate(mom.pdf = dbeta(x=x, shape1 = moms$x[1], shape2 = moms$x[2]),
+         mle.pdf = dbeta(x=x, shape1 = mles$par[1], shape2 = mles$par[2]))
+
+
+
+histogram.plot = ggplot()+                  # specify data
+  geom_histogram(data = dat2022, aes(x = `2022 Death Rate`, y=after_stat(density)),
+                 breaks=seq(0,0.025,0.003)) +
+  geom_line(data = ggdat.beta, aes(x=x, y=mom.pdf, color="MOM"))+ #MOM line
+  geom_line(data = ggdat.beta, aes(x=x, y=mle.pdf, color="MLE"))+ #MLE line
+  geom_hline(yintercept=0)+                                          # plot x axis
+  theme_bw()+                                                        # change theme
   #geom_density(color = "blue") +
-  xlab("2022 Death Rate")+                                                           # label x axis
+  xlab("2022 Death Rate")+                                           # label x axis
   ylab("Density")+                                                   # label y axis
   labs(color = "")
 histogram.plot
+
+
+
 
 
 
