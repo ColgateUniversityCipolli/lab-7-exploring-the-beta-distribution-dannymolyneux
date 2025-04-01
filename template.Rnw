@@ -54,9 +54,6 @@ Provide a roadmap of the structure of the paper.
 \subsection{Intro Subsection}
 You might need/want to discuss the topics in subsections. Or, you may have multiple questions.
 
-\begin{Figure}
-\includegraphics{screenshot}
-\end{Figure}
 
 \section{Methods}
 Describe the data you are working with, if applicable. Describe the specific process you will follow to answer the question at hand. This does not mean you should write something like this.

@@ -91,6 +91,16 @@ sample = function(alpha, beta){
     summarize(
       alpha = alpha, beta = beta, mean = mean(x), variance = var(x), skew = skewness(x), kurt = kurtosis(x)
     )
+  return(sample.summary)
+}
+
+plot.funct = function(alpha, beta){
+  set.seed(7272) # Set seed so we all get the same results.
+  sample.size <- 500 # Specify sample details
+  beta.sample <- rbeta(n = sample.size,  # sample size
+                       shape1 = alpha,   # alpha parameter
+                       shape2 = beta)    # beta parameter
+  beta.sample = data.frame(x = beta.sample) #turn it into a data frame
   sample.plot = ggplot(data= beta.sample, aes(x=x))+                  # specify data
     geom_histogram(aes(y=after_stat(density)), 
                    #binwidth = 0.1
@@ -102,10 +112,12 @@ sample = function(alpha, beta){
     geom_density(color = "blue") +
     xlab("x")+                                                           # label x axis
     ylab("Density")+                                                   # label y axis
-    labs(color = "")                                              
-  sample.plot
-  return(sample.summary)
+    labs(color = "")+
+    ylim(0,3)
+  return(sample.plot)
 }
+library(patchwork)
+plot.funct(2, 5) + plot.funct(5, 5) + plot.funct(5, 2) + plot.funct(0.5, 0.5)
 
 #alpha = 2, beta = 5
 #empty data frame and bind the rows for each distribution
