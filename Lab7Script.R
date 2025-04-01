@@ -158,23 +158,23 @@ cum.dat = tibble(
 mean.plot = ggplot(cum.dat, aes(x=data.points, y = mean)) +
   geom_line() +
   geom_hline(yintercept = data_2_5$mean, linetype = "dashed", color = "blue") +
-  labs(title = "Cumulative mean for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Mean")
+  labs(title = "Cumulative mean", x = "# of data points", y = "Mean")
 
 var.plot = ggplot(cum.dat, aes(x=data.points, y = variance)) +
   geom_line() +
   geom_hline(yintercept = data_2_5$variance, linetype = "dashed", color = "blue") +
-  labs(title = "Cumulative variance for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Variance")
+  labs(title = "Cumulative variance", x = "# of data points", y = "Variance")
 
 skew.plot = ggplot(cum.dat, aes(x=data.points, y = skewness)) +
   geom_line() +
   geom_hline(yintercept = data_2_5$skew, linetype = "dashed", color = "blue") +
-  labs(title = "Cumulative skewness for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Skewness")
+  labs(title = "Cumulative skewness", x = "# of data points", y = "Skewness")
 
 kurt.plot = ggplot(cum.dat, aes(x=data.points, y = kurtosis)) +
   geom_line() +
   #adjust kurtosis by 3 because cumstats package uses regular kurtosis
   geom_hline(yintercept = data_2_5$kurt + 3, linetype = "dashed", color = "blue") +
-  labs(title = "Cumulative kurtosis for a Beta(2,5) sample", x = "# of data points", y = "Cumulative Kurtosis")
+  labs(title = "Cumulative kurtosis", x = "# of data points", y = "Kurtosis")
 mean.plot + var.plot + skew.plot + kurt.plot
 
 for(i in 2:50){
