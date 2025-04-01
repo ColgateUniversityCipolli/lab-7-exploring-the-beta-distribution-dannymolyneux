@@ -85,10 +85,9 @@
 }
 
 
-
 \maketitle
 
-\begin{multicols}{2}
+\begin{multicols}{2} \raggedcolumns
 \begin{abstract}
 In labs 7 and 8, I did a thorough analysis of the beta distribution. This includes an analysis of its parameters, properties, what it looks like, and what it's used for. This information is helpful for the same reason it would be helpful for any probability distribution. They are a way for us to estimate various properties of data that approximately follows a certain probability distribution.
 \end{abstract}
@@ -102,25 +101,88 @@ We analyze the distribution and its parameters by using multiple sets of paramet
 
 Another question we aim to answer at the end of the lab is which estimators we should use for the beta distribution, method of moments, or maximum likelihood estimates? We can do this through the use of sampling distributions again, but now for the MOM and MLE for each new sample. I used data on country death rates from 2022 as an example. Calculating properties like bias, precision, and mean squared error can tell us which estimator is more optimal. 
 
-\section{Methods}
-Describe the data you are working with, if applicable. Describe the specific process you will follow to answer the question at hand. This does not mean you should write something like this.
-\begin{quote}
-\textit{I did this and then I did that and then I did this other thing and then..., and then..., and then...}
-\end{quote}
-Instead, it should provide a clear and concise narrative that flows from the problem specification in the Introduction to how you will approach answering it. This is where I would expect to see some citations for \texttt{R} packages you will use to conduct the statistical analysis reported in the Results section.
+\section{Density Functions and Parameters}
+The beta distribution is a continuous distribution that is used to model a random variable that ranges from 0 to 1, meaning it good at modeling probabilities/proportions. It has two parameters, alpha and beta, which are both positive numbers. These parameters affect the distribution's shape, making it very flexible. Let's look more closely at what each of these parameters really means, and what this distribution looks like generally.
+pdf 
+  2 
+
+\begin{figure} [H]
+\centering
+\includegraphics[width=\linewidth]{beta.plots.pdf}
+\caption{Histograms for various beta distributions}
+\label{fig:beta}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\resizebox{0.4\textwidth}{!}{ 
+  \begin{tabular}{rllllll}
+    \hline
+  & alpha & beta & mean & variance & skew & kurt \\ 
+    \hline
+  1 & 2.0 & 5.0 & 0.2857143 & 0.02551020 & 0.5962848 & -0.1200000 \\ 
+  2 & 5.0 & 5.0 & 0.5000000 & 0.02272727 & 0.0000000 & -0.4615385 \\ 
+  3 & 5.0 & 2.0 & 0.7142857 & 0.02551020 & -0.5962848 & -0.1200000 \\ 
+  4 & 0.5 & 0.5 & 0.5000000 & 0.12500000 & 0.0000000 & -1.5000000 \\
+    \hline
+  \end{tabular}
+}
+\caption{Numerical summaries of beta distributions} 
+\label{beta.plots:reference}
+\end{table}
+
+As you can see, I made plots for each of the four distributions using the ggplot2 *** and tidyverse *** packages. The Beta(2,5) plot is skewed left, and the Beta(5,2) plot is the same graph, except skewed right. When alpha and beta are equal (5,5), the plot is symmetrical. This tells me that having a larger alpha skews the graph right, and a larger beta skews the graph left. What this means is that a larger alpha means more data will be near 1, indicating that alpha represents "successes". We can say the opposite about beta. However, you can see in the Beta(0.5,0.5) plot that it has a U-shape. This is because when the parameters are less than 1, the plot becomes bimodal with peaks near 0 and 1. This is just a result due to the probability density function of the Beta distribution. One thing to note from the table if you couldn't tell from the plots is that the mean is 0.5 if alpha and beta are equal. If alpha is larger, the mean is closer to one, and the opposite is true if beta is larger. This makes sense given the skewness we know that the parameters cause.
+
+So now we know that if the two parameters are greater than or equal to one, the Beta distribution will have a bell-shaped curve, with its skewness dependent on which parameter is larger. If alpha is larger, it will have a right skew, and vice versa for beta. If they are equal, it will be symmetric. In the case that the parameters are less than one, the plot will take on a U-shaped curve, with peaks near zero and one. The closer the parameters are to zero, the higher the density at the ends will be. We also saw some patterns in the statistics in relation to the parameters, but we will get more into that in the next section.
+
+\section{Properties (Mean, variance, skewness, and kurtosis)}
+There are formulas with respect to alpha and beta for the mean, variance, skewness, and kurtosis of the beta distribution. Another way to caluclate these statistics is to use moments (centered and uncentered). We can then compare these results to the values we got from the original formulas to confirm that our function is working properly. In order to calcualte these statistics using moments, I used the \texttt(integrate()) function from base \texttt{R}.
+
+One interesting thing to look at in regards to these statistics, is how their variance changes based on sample size. Is the sample skewness always going to be close to the true population skewness? If not, how big of a sample size does it take to converge? Well we can answer this question by computing the cumulative numerical summaries using the cumstats **** package, while also using \texttt{geom\textunderscore line()} to plot the true population values. The patchwork *** package is also useful here so that we can plot all four statistics next to each other.
+
+\begin{kframe}
 
 
-\subsection{Methods Subsection}
-Much like the Introduction, subsections can be helpful for the Methods section. For example, you might describe data collection and the statistical analyses of the collected data in different subsections. Or, you may have different questions that require distinct methods. 
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'beta.data' not found}}
 
-\section{Results}
-Tie together the Introduction -- where you introduce the problem at hand -- and the methods --  what you propose to do to answer the question. Present your data, the results of your analyses, and how each reported aspect contributes to answering the question. This section should include table(s), statistic(s), and graphical displays. Make sure to put the results in a sensible order and that each result contributes a logical and developed solution. It should not just be a list. Avoid being repetitive. 
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'data\_2\_5' not found}}
 
-\subsection{Results Subsection}
-Subsections can be helpful for the Results section, too. This can be particularly helpful if you have different questions to answer. 
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'data\_2\_5' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'data\_2\_5' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'data\_2\_5' not found}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'mean.plot' not found}}\end{kframe}pdf 
+  2 
+
+\begin{figure} [H]
+\centering
+\includegraphics[width=\linewidth]{/Users/dannymolyneux/Documents/GitHub/lab-7-exploring-the-beta-distribution-dannymolyneux/cum.plot.pdf}
+\caption{Cumulative stats for Beta(2, 5)}
+\label{fig:cumstats}
+\end{figure}
+
+As you can see in the plots, the cumulative statistics do end up converging to their true values, but it definitely takes time. For mean and kurtosis, I would say after 100 data points, the cumulative statistic stays pretty close to its true value. Variance actually stays above its true value even after 500 data points, so maybe we needed more data for variance. Skewness looks like it is converging very quickly (around 30 data points), but then goes away from its true value until around 300 data points. 
+
+If we want to see the distribution of all of these different statistics, we can use the resampling method I mentioned earlier. I stored each statistic for 1000 different samples, and then plotted the distribution for each stat.
+
+pdf 
+  2 
+
+\begin{figure} [H]
+\centering
+\includegraphics[width=\linewidth]{resampling.pdf}
+\caption{Histograms for sampling distributions}
+\label{fig:sampling}
+\end{figure}
+
+\section{Estimators (MOM and MLE)}
 
 
-\section{Discussion}
+\section{Example (Death rates data)}
+
+
  You should objectively evaluate the evidence you found in the data. Do not embellish or wish-terpet (my made-up phase for making an interpretation you, or the researcher, wants to be true without the data \emph{actually} supporting it). Connect your findings to the existing information you provided in the Introduction.
 
 Finally, provide some concluding remarks that tie together the entire paper. Think of the last part of the results as abstract-like. Tell the reader what they just consumed -- what's the takeaway message?

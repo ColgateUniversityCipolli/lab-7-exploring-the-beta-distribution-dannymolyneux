@@ -254,7 +254,7 @@ kurt.dist.plot = ggplot(data= sample.distribution, aes(x=kurt))+
   geom_histogram(aes(y=after_stat(density)), 
                  #binwidth = 0.1
                  #bins=10
-                 breaks=seq(-0.5,0.5,0.1)) +                 
+                 breaks=seq(-4,-2,0.1)) +                 
   geom_hline(yintercept=0)+                                           
   theme_bw()+                                                       
   geom_density(color = "blue") +
