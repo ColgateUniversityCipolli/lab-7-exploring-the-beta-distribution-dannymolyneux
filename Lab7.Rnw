@@ -44,7 +44,7 @@ In labs 7 and 8, I did a thorough analysis of the beta distribution. This includ
 \section{Introduction}
 In this lab, there is not one specific question we want to answer. We more so want to analyze the beta distribution by looking at its use, meaning, parameters, properties, and what it looks like.
 
-We analyze the distribution and its parameters by using multiple sets of parameters, and comparing their plots as well as their numerical summaries. To analyze the properties of the beta distribution, we first see how the mean, variance, skew, and kurtosis vary based on the sample size, and whether or not they converge to the true population values. If you want to see the distribution of these statistics, called sampling distributions, we can do what's called resampling, and store each statistic for every sample we take. 
+We analyze the distribution and its parameters by using multiple sets of parameters, and comparing their plots as well as their numerical summaries. To analyze the properties of the beta distribution, we first see how the mean, variance, skew, and kurtosis vary based on the sample size, and whether or not they converge to the true population values. If you want to see the distribution of these statistics, called sampling distributions, we can do iterate through a loop, generating new data each iteration. If we store the statistics for each iteration, we can then summarize the distributions of these statistics, which is what gives us the sampling distributions. 
 
 Another question we aim to answer at the end of the lab is which estimators we should use for the beta distribution, method of moments, or maximum likelihood estimates? We can do this through the use of sampling distributions again, but now for the MOM and MLE for each new sample. I used data on country death rates from 2022 as an example. Calculating properties like bias, precision, and mean squared error can tell us which estimator is more optimal. 
 \section{Density Functions and Parameters}
@@ -110,7 +110,7 @@ One interesting thing to look at in regards to these statistics, is how their va
 \end{figure}
 As you can see in the plots, the cumulative statistics do end up converging to their true values, but it definitely takes time. For mean and kurtosis, I would say after 100 data points, the cumulative statistic stays pretty close to its true value. Variance actually stays above its true value even after 500 data points, so maybe we needed more data for variance. Skewness looks like it is converging very quickly (around 30 data points), but then goes away from its true value until around 300 data points. 
 
-If we want to see the distribution of all of these different statistics, we can use the resampling method I mentioned earlier. I stored each statistic for 1000 different samples, and then plotted the distribution for each stat.
+If we want to see the distribution of all of these different statistics, we can find their sampling distribution like I mentioned earlier. I stored each statistic for 1000 different samples, and then plotted the distribution for each stat.
 
 <<size = 'scriptsize', echo=FALSE, fig.width = 6, fig.height=4, results="asis", warning = F, message = F>>=
 library(e1071)
@@ -204,7 +204,7 @@ As you can see below, the estimator lines aren't perfect, but they are pretty ac
   \caption{Estimators for 2022 Death Rates}
   \label{fig:estimators}
 \end{figure}
-Now that I want to determine which estimator is more accurate, I used the resampling method again, to get the distribution of both alpha and beta, for each estimator method, giving me four distributions. It may be difficult to get the answer to the question from the plots alone, which is why I calculated the bias, precision, and mean squared error of each distribution. 
+Now that I want to determine which estimator is more accurate, I found the sampling distributions of the estimators just like I did earlier for the statistics. This gives me the distributions of both alpha and beta, for each estimator method, giving me four distributions. It may be difficult to get the answer to the question from the plots alone, which is why I calculated the bias, precision, and mean squared error of each distribution. 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{bestestimator.png}
@@ -231,7 +231,7 @@ Now that I want to determine which estimator is more accurate, I used the resamp
 \end{table}
 As you can see in table 2, the MLE values have both a lower bias and a lower MSE than the MOM values, already making it seem like MLE is more optimal for this example. To make it more convincing, if you look at the precision column, you can see that the MLE values are more precise for both alpha and beta. I think it is safe to say that even though it's close, the MLE method is a better estimator of the beat distribution parameters for 2022 death rates.
 \section{Discussion}
-I have learned through this lab that using a combination of cumulative statistics, resampling, and point estimators, you can learn a lot about a probability distribution, even if there is an unknown parameter. However, without a data set that fits the basic requirements of the probability distribution, you won't be able to learn as much. We knew for the Beta distribution that we just needed continuous data ranging from 0 to 1, so pretty much any data that consists of rates will approximately fit into the Beta Distribution. The reason the Beta distribution is so easy to fit, is because of its flexibility. Alpha and Beat can take on infinitely many values, and can so drastically change the shape of the curve. Other probability distributions are probably more difficult to approximate than the Beta distribution, but I am sure that through the use of all the methods I used in this lab, you can learn a lot about any distribution.
+I have learned through this lab that using a combination of cumulative statistics, sampling distributions, and point estimators, you can learn a lot about a probability distribution, even if there is an unknown parameter. However, without a data set that fits the basic requirements of the probability distribution, you won't be able to learn as much. We knew for the Beta distribution that we just needed continuous data ranging from 0 to 1, so pretty much any data that consists of rates will approximately fit into the Beta Distribution. The reason the Beta distribution is so easy to fit, is because of its flexibility. Alpha and Beat can take on infinitely many values, and can so drastically change the shape of the curve. Other probability distributions are probably more difficult to approximate than the Beta distribution, but I am sure that through the use of all the methods I used in this lab, you can learn a lot about any distribution.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
