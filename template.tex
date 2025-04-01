@@ -75,36 +75,32 @@
 \begin{document}
 
 \vspace{-1in}
-\title{Lab XX -- MATH 240 -- Computational Statistics}
+\title{Lab 7/8 -- MATH 240 -- Computational Statistics}
 
 \author{
-  First Author \\
-  Affiliation  \\
-  Department  \\
-  {\tt email@domain}
+  Danny Molyneux \\
+  Colgate University  \\
+  Mathematics  \\
+  {\tt dmolyneux@colgate.edu}
 }
 
-\date{}
+
 
 \maketitle
 
 \begin{multicols}{2}
 \begin{abstract}
-This document provides a basic template for the 2-page labs we will complete each week. Here, briefly summarize what you did and why it might be helpful. Provide all the top-line conclusions, but avoid providing \emph{all} the details. Results should be limited to ``we show X, Y, and Z."
+In labs 7 and 8, I did a thorough analysis of the beta distribution. This includes an analysis of its parameters, properties, what it looks like, and what it's used for. This information is helpful for the same reason it would be helpful for any probability distribution. They are a way for us to estimate various properties of data that approximately follows a certain probability distribution.
 \end{abstract}
 
-\noindent \textbf{Keywords:} What topics does the lab cover concerning class? List 3-4 key terms here, separated by semicolons.
+\noindent \textbf{Keywords:} Probability, moments, summarize, sample size.
 
 \section{Introduction}
-Provide an overarching summary of what you're talking about. In this section, you introduce the idea to the reader, and your goal is to pull them in. What's the mystery you aim to solve?
+In this lab, there is not one specific question we want to answer. We more so want to analyze the beta distribution by looking at its use, meaning, parameters, properties, and what it looks like.
 
-You want to provide enough background to understand the context of the work. Specifically, what is the question you are addressing? If it applies, describe what information currently exists about this problem, including citations, and explain how the question you're answering complements this work.
+We analyze the distribution and its parameters by using multiple sets of parameters, and comparing their plots as well as their numerical summaries. To analyze the properties of the beta distribution, we first see how the mean, variance, skew, and kurtosis vary based on the sample size, and whether or not they converge to the true population values. If you want to see the distribution of these statistics, called sampling distributions, we can do what's called resampling, and store each statistic for every sample we take. 
 
-Provide a roadmap of the structure of the paper. 
-
-\subsection{Intro Subsection}
-You might need/want to discuss the topics in subsections. Or, you may have multiple questions.
-
+Another question we aim to answer at the end of the lab is which estimators we should use for the beta distribution, method of moments, or maximum likelihood estimates? We can do this through the use of sampling distributions again, but now for the MOM and MLE for each new sample. I used data on country death rates from 2022 as an example. Calculating properties like bias, precision, and mean squared error can tell us which estimator is more optimal. 
 
 \section{Methods}
 Describe the data you are working with, if applicable. Describe the specific process you will follow to answer the question at hand. This does not mean you should write something like this.

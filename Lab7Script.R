@@ -386,5 +386,5 @@ summary.table = table |>
          Precision = "V2",
          MSE = "V3")
 
-
+view(summary.table)
 
